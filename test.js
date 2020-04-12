@@ -61,8 +61,7 @@ const weatherStateChanges = [
 
 var clockLabel = document.getElementById('clock');
 var weatherLabel = document.getElementById('weather');
-var future = document.getElementById('weatherFuture');
-var weather60 = document.getElementById("weatherIn60");
+var futureLabel = document.getElementById('future');
 var weatherPeriod = 384;
 var gameHourLength = 120; 
 
@@ -76,9 +75,9 @@ function tick() {
     weatherLabel.innerHTML = "Current weather: " + getWeatherForPeriodTime(mytime, 0).weather;
 
     for(var i = 1; i <= 5; i++){
-        futureWeather = futureWeather + getWeatherForPeriodTime(mytime, i).weather + " in " + getWeatherForPeriodTime(mytime, i).etaTime + "</br>";
+        futureWeather = futureWeather + "<p>" + getWeatherForPeriodTime(mytime, i).weather + " in " + getWeatherForPeriodTime(mytime, i).etaTime + "</p>";
     }
-    future.innerHTML = futureWeather;
+    futureLabel.innerHTML = futureWeather;
 
 }
 
