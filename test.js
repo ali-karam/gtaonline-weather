@@ -9,7 +9,7 @@ const weatherStateChanges = [
     [16,    "Clear"],
     [28,    "Misty"],
     [31,    "Clear"],
-    [41,    "haze"],
+    [41,    "Hazey"],
     [45,    "Partly Cloudy"],
     [52,    "Misty"],
     [55,    "Cloudy"],
@@ -73,10 +73,10 @@ function tick() {
     var futureWeather = "";
 
     clockLabel.innerHTML = "Current time in GTA Online: " + showGtaTime(time);
-    weatherLabel.innerHTML = "Current weather: " + getWeatherForPeriodTime(gtaTime, 0).weather;
+    weatherLabel.innerHTML = "Current weather: " + getWeatherForPeriodTime(380, null).weather;
 
     for(var i = 1; i <= numForecasts; i++){
-        futureWeather = futureWeather + "<p>" + getWeatherForPeriodTime(gtaTime, i).weather + " in " + getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
+        futureWeather = futureWeather + "<p>" + getWeatherForPeriodTime(380, i).weather + " in " + getWeatherForPeriodTime(380, i).etaTime + "</p>";
     }
     futureLabel.innerHTML = futureWeather;
 
@@ -103,24 +103,32 @@ function getWeatherForPeriodTime(periodTime, next) {
     var wea = null;
     var eta = null;
     var nextIndex = null;
+    //console.log(periodTime);
     if (periodTime > weatherPeriod || periodTime < 0) return wea;
     for (var i = 0; i < weatherStateChanges.length; i++) {
         nextIndex = i - 1 + next;
         if (weatherStateChanges[i][0] > periodTime) {
-            if(next == 0){
+            if(next == null){
                 wea = weatherStateChanges[i - 1][1];
+                console.log(wea);
             } 
-            else if(nextIndex >= weatherStateChanges.length){
-                nextIndex = 1;
+            else if(nextIndex > weatherStateChanges.length - 1){
+
+                nextIndex = nextIndex - weatherStateChanges.length + 1;
                 wea = weatherStateChanges[nextIndex][1];
                 eta = secToVerboseInterval((weatherStateChanges[nextIndex][0] - periodTime + weatherPeriod) * 120);
+                console.log(nextIndex);
+                console.log(wea);
             } else {
                 eta = secToVerboseInterval((weatherStateChanges[nextIndex][0] - periodTime) * 120);
+                console.log(nextIndex);
                 wea = weatherStateChanges[nextIndex][1];
             }
             break;
+
         }
     }
+    //console.log(wea);
     if (wea === null) wea = weatherStateChanges[weatherStateChanges.length - 1][1];
     return {weather: wea, etaTime: eta};
 }
