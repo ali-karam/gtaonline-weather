@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Test</title>
+</head>
+<body>
+
+    <div id="container">
+    <div id="header">
+        <h1>GTA Weather Cam & Forecast</h1>
+    </div>
+    <div id="section">
+        <p id="clock"></p>
+        <p id="weather"></p>
+        <p id="weatherFuture"></p>
+        <p id="weatherIn60"></p>
+
+    </div>
+</div>
+</body>
+
+<script>
+
+    const weatherStateChanges = [
+    [0,     "partlyCloudy"],
+    [4,     "mist"],
+    [7,     "mostlyCloudy"],
+    [11,    "clear"],
+    [14,    "mist"],
+    [16,    "clear"],
+    [28,    "mist"],
+    [31,    "clear"],
+    [41,    "haze"],
+    [45,    "partlyCloudy"],
+    [52,    "mist"],
+    [55,    "cloudy"],
+    [62,    "fog"],
+    [66,    "cloudy"],
+    [72,    "partlyCloudy"],
+    [78,    "fog"],
+    [82,    "cloudy"],
+    [92,    "mostlyClear"],
+    [104,   "partlyCloudy"],
+    [105,   "drizzle"],
+    [108,   "partlyCloudy"],
+    [125,   "mist"],
+    [128,   "partlyCloudy"],
+    [131,   "rain"],
+    [134,   "drizzle"],
+    [137,   "cloudy"],
+    [148,   "mist"],
+    [151,   "mostlyCloudy"],
+    [155,   "fog"],
+    [159,   "clear"],
+    [176,   "mostlyClear"],
+    [196,   "fog"],
+    [201,   "partlyCloudy"],
+    [220,   "mist"],
+    [222,   "mostlyClear"],
+    [244,   "mist"],
+    [246,   "mostlyClear"],
+    [247,   "rain"],
+    [250,   "drizzle"],
+    [252,   "partlyCloudy"],
+    [268,   "mist"],
+    [270,   "partlyCloudy"],
+    [272,   "cloudy"],
+    [277,   "partlyCloudy"],
+    [292,   "mist"],
+    [295,   "partlyCloudy"],
+    [300,   "mostlyCloudy"],
+    [306,   "partlyCloudy"],
+    [318,   "mostlyCloudy"],
+    [330,   "partlyCloudy"],
+    [337,   "clear"],
+    [367,   "partlyCloudy"],
+    [369,   "rain"],
+    [376,   "drizzle"],
+    [377,   "partlyCloudy"]
+];
+
+
+var clockLabel = document.getElementById('clock');
+var weatherLabel = document.getElementById('weather');
+var future = document.getElementById('weatherFuture');
+var weather60 = document.getElementById("weatherIn60");
+var weatherPeriod = 384;
+var gameHourLength = 120; 
+
+function tick() {
+    var date = new Date();
+    var time = date.getTime();
+    var mytime = getGtaTimeFromDate(time);
+    //var futuretime = getGtaTimeFromDate(time + 20 * 60000);
+
+    var mytest = getWeatherForPeriodTime(mytime).test;
+  
+
+    var time60 = getGtaTimeFromDate(time + 12 * 60000);
+    clockLabel.innerHTML = "Current time in GTA Online: " + gtaTime(time);
+    weatherLabel.innerHTML = "Current weather: " + 
+        getWeatherForPeriodTime(mytime).current;
+    future.innerHTML = getWeatherForPeriodTime(mytime).future + " " + mytest ;
+    weather60.innerHTML = getWeatherForPeriodTime(time60).current;
+
+}
+
+function gtaTime(time) { 
+    hours =  Math.floor(time / (2000 * 60)) % 24;
+    minutes = Math.floor(time / 2000) % 60;
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    return hours + ":" + minutes + " " + ampm;
+}
+
+function getGtaTimeFromDate(d) {
+    var timestamp           = Math.floor(d / 1000.0);
+    var gtaHoursTotal       = timestamp / gameHourLength;
+
+    return gtaHoursTotal % weatherPeriod;
+
+}
+
+function getWeatherForPeriodTime(periodTime) {
+    var cur = null;
+    if (periodTime > weatherPeriod || periodTime < 0) return cur;
+    for (var i = 0; i < weatherStateChanges.length; i++) {
+        if (weatherStateChanges[i][0] > periodTime) {
+            cur = weatherStateChanges[i - 1][1];
+            fut = weatherStateChanges[i][1];
+            tes = (weatherStateChanges[i][0] - periodTime) * 120;
+            break;
+        }
+    }
+    if (cur === null) cur = weatherStateChanges[weatherStateChanges.length - 1][1];
+    return {current: cur, future: fut, test: secToVerboseInterval(tes)};
+}
+
+
+function secToVerboseInterval(seconds) {
+    if (seconds < 60) return "Less than 1 minute";
+
+    var sMod60  = seconds % 60;
+    var hours   = Math.floor(seconds / 3600 + (sMod60 / 3600));
+    var minutes = Math.floor((seconds - (hours * 3600)) / 60 + (sMod60 / 60));
+    var ret =
+        (hours > 0 ? (hours + (hours > 1 ? " hours " : " hour ")) : "") +
+        (minutes > 0 ? (minutes + (minutes > 1 ? " minutes" : " minute")) : "");
+    if (ret.endsWith(" ")) ret = ret.slice(0, -1);
+    return ret;
+}
+
+
+
+
+tick();
+var timer = setInterval(tick, 2000);
+</script>
+</html>
