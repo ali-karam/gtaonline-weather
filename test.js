@@ -73,10 +73,13 @@ function tick() {
     var futureWeather = "";
 
     clockLabel.innerHTML = "Current time in GTA Online: " + showGtaTime(time);
-    weatherLabel.innerHTML = "Current weather: " + getWeatherForPeriodTime(380, 0).weather;
+    weatherLabel.innerHTML = "Current weather: " + 
+        getWeatherForPeriodTime(gtaTime, 0).weather;
 
     for(var i = 1; i <= numForecasts; i++){
-        futureWeather = futureWeather + "<p>" + getWeatherForPeriodTime(380, i).weather + " in " + getWeatherForPeriodTime(350, i).etaTime + "</p>";
+        futureWeather = futureWeather + "<p>" + 
+        getWeatherForPeriodTime(gtaTime, i).weather + " in " + 
+        getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
     }
     futureLabel.innerHTML = futureWeather;
 
@@ -104,37 +107,29 @@ function getWeatherForPeriodTime(periodTime, next) {
     var eta = null;
     var currIndex;
     var after, previous, test;
-    var hello = weatherStateChanges.length;
+    var end = weatherStateChanges.length;
 
-
-    for(var i = 0; i < weatherStateChanges.length; i++){
-        after = (periodTime > weatherStateChanges[weatherStateChanges.length - 1][0]) ? 1 : i + 1;
+    for(var i = 0; i < end; i++){
+        after = (periodTime > weatherStateChanges[end - 1][0]) ? 1 : i + 1;
 
         if(periodTime < weatherStateChanges[after][0]){
                 currIndex = i;
                 break;
+        } else {
+            currIndex = end - 1;
         }
     }
     if(next == 0){
-        //console.log(periodTime);
         wea = weatherStateChanges[currIndex][1];
-    } else if(currIndex + next < weatherStateChanges.length ) {
-        //console.log(currIndex);
-        //console.log(next);
+    } 
+    else if(currIndex + next < end) {
         wea = weatherStateChanges[currIndex + next][1];
-        eta = secToVerboseInterval((weatherStateChanges[currIndex + next][0] - periodTime) * 120);
+        eta = secToVerboseInterval((weatherStateChanges[currIndex + 
+            next][0] - periodTime) * 120);
     } else {
-        test = hello - currIndex + next;
-        //hello++;
-        //previous = weatherStateChanges.length - currIndex + next;
-        //console.log(previous);
-        //console.log(currIndex + next - 53);
-        wea = weatherStateChanges[currIndex + next - hello + 1][1];
-        //console.log(next);
-        console.log(currIndex + next - hello + 1);
-        //console.log(test);
-        
-        
+        wea = weatherStateChanges[currIndex + next - end + 1][1];
+        eta = secToVerboseInterval((weatherStateChanges[currIndex + next - 
+            end + 1][0] - periodTime + weatherPeriod) * 120);        
     }
     return {weather: wea, etaTime: eta};
 }
