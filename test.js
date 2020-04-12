@@ -73,10 +73,10 @@ function tick() {
     var futureWeather = "";
 
     clockLabel.innerHTML = "Current time in GTA Online: " + showGtaTime(time);
-    weatherLabel.innerHTML = "Current weather: " + getWeatherForPeriodTime(380, null).weather;
+    weatherLabel.innerHTML = "Current weather: " + getWeatherForPeriodTime(320, 0).weather;
 
     for(var i = 1; i <= numForecasts; i++){
-        futureWeather = futureWeather + "<p>" + getWeatherForPeriodTime(380, i).weather + " in " + getWeatherForPeriodTime(380, i).etaTime + "</p>";
+        futureWeather = futureWeather + "<p>" + getWeatherForPeriodTime(320, i).weather + " in " + getWeatherForPeriodTime(320, i).etaTime + "</p>";
     }
     futureLabel.innerHTML = futureWeather;
 
@@ -102,34 +102,31 @@ function getGtaTimeFromDate(d) {
 function getWeatherForPeriodTime(periodTime, next) {
     var wea = null;
     var eta = null;
-    var nextIndex = null;
-    //console.log(periodTime);
-    if (periodTime > weatherPeriod || periodTime < 0) return wea;
-    for (var i = 0; i < weatherStateChanges.length; i++) {
-        nextIndex = i - 1 + next;
-        if (weatherStateChanges[i][0] > periodTime) {
-            if(next == null){
-                wea = weatherStateChanges[i - 1][1];
-                console.log(wea);
-            } 
-            else if(nextIndex > weatherStateChanges.length - 1){
+    var currIndex;
+    var after, previous;
 
-                nextIndex = nextIndex - weatherStateChanges.length + 1;
-                wea = weatherStateChanges[nextIndex][1];
-                eta = secToVerboseInterval((weatherStateChanges[nextIndex][0] - periodTime + weatherPeriod) * 120);
-                console.log(nextIndex);
-                console.log(wea);
-            } else {
-                eta = secToVerboseInterval((weatherStateChanges[nextIndex][0] - periodTime) * 120);
-                console.log(nextIndex);
-                wea = weatherStateChanges[nextIndex][1];
-            }
-            break;
 
+    for(var i = 0; i < weatherStateChanges.length; i++){
+        //previous = (i == 0) ? weatherStateChanges.length - 1 : i - 1;
+        after = (i + 1 > weatherStateChanges.length - 1) ? 1 : i + 1;
+
+        if(periodTime < weatherStateChanges[after][0]){
+                currIndex = i;
+                break;
         }
     }
-    //console.log(wea);
-    if (wea === null) wea = weatherStateChanges[weatherStateChanges.length - 1][1];
+    if(next == 0){
+        //console.log(periodTime);
+        wea = weatherStateChanges[currIndex][1];
+    } else if(currIndex + next < weatherStateChanges.length - 1){
+        wea = weatherStateChanges[currIndex + next][1];
+        //console.log(weatherStateChanges[currIndex + next][0] - periodTime);
+        eta = secToVerboseInterval((weatherStateChanges[currIndex + next][0] - periodTime) * 120);
+    } else {
+        wea = weatherStateChanges[next][1];
+        eta = secToVerboseInterval((weatherStateChanges[currIndex + next][0] - periodTime + weatherPeriod) * 120);
+
+    }
     return {weather: wea, etaTime: eta};
 }
 
