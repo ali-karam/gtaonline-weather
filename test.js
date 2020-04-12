@@ -102,14 +102,28 @@ function getGtaTimeFromDate(d) {
 function getWeatherForPeriodTime(periodTime, next) {
     var wea = null;
     var eta = null;
+    var nextIndex;
     if (periodTime > weatherPeriod || periodTime < 0) return wea;
     for (var i = 0; i < weatherStateChanges.length; i++) {
         if (weatherStateChanges[i][0] > periodTime) {
             if(next == 0){
                 wea = weatherStateChanges[i - 1][1];
             } else {
-                wea = weatherStateChanges[i - 1 + next][1];
-                eta = secToVerboseInterval((weatherStateChanges[i - 1 + next][0] - periodTime) * 120);
+                nextIndex = i - 1 + next;
+                if(nextIndex >= weatherStateChanges.length){
+                    nextIndex = 0;
+                    wea = weatherStateChanges[nextIndex][1];
+                    eta = secToVerboseInterval((weatherStateChanges[nextIndex][0] - periodTime + weatherPeriod) * 120);
+                } else {
+
+                
+
+                    eta = secToVerboseInterval((weatherStateChanges[nextIndex][0] - periodTime) * 120);
+                    wea = weatherStateChanges[nextIndex][1];
+                }
+                
+
+              
             }
             break;
         }
