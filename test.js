@@ -63,25 +63,26 @@ var clockLabel = document.getElementById('clock');
 var weatherLabel = document.getElementById('weather');
 var futureLabel = document.getElementById('future');
 var weatherPeriod = 384;
-var gameHourLength = 120; 
+var gameHourLength = 120;
+var numForecasts = 5; 
 
 function tick() {
     var date = new Date();
     var time = date.getTime();
-    var mytime = getGtaTimeFromDate(time);
+    var gtaTime = getGtaTimeFromDate(time);
     var futureWeather = "";
 
-    clockLabel.innerHTML = "Current time in GTA Online: " + gtaTime(time);
-    weatherLabel.innerHTML = "Current weather: " + getWeatherForPeriodTime(mytime, 0).weather;
+    clockLabel.innerHTML = "Current time in GTA Online: " + showGtaTime(time);
+    weatherLabel.innerHTML = "Current weather: " + getWeatherForPeriodTime(gtaTime, 0).weather;
 
-    for(var i = 1; i <= 5; i++){
-        futureWeather = futureWeather + "<p>" + getWeatherForPeriodTime(mytime, i).weather + " in " + getWeatherForPeriodTime(mytime, i).etaTime + "</p>";
+    for(var i = 1; i <= numForecasts; i++){
+        futureWeather = futureWeather + "<p>" + getWeatherForPeriodTime(gtaTime, i).weather + " in " + getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
     }
     futureLabel.innerHTML = futureWeather;
 
 }
 
-function gtaTime(time) { 
+function showGtaTime(time) { 
     hours =  Math.floor(time / (2000 * 60)) % 24;
     minutes = Math.floor(time / 2000) % 60;
     var ampm = hours >= 12 ? 'pm' : 'am';
@@ -94,7 +95,6 @@ function gtaTime(time) {
 function getGtaTimeFromDate(d) {
     var timestamp = Math.floor(d / 1000.0);
     var gtaHoursTotal = timestamp / gameHourLength;
-
     return gtaHoursTotal % weatherPeriod;
 
 }
