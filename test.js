@@ -58,13 +58,12 @@ const weatherStateChanges = [
     [377,   "Partly Cloudy"]
 ];
 
-
 var clockLabel = document.getElementById('clock');
 var weatherLabel = document.getElementById('weather');
 var futureLabel = document.getElementById('future');
 var weatherPeriod = 384;
 var gameHourLength = 120;
-var numForecasts = 20; 
+var numForecasts = 5; 
 var first = true;
 
 function tick() {
@@ -77,9 +76,7 @@ function tick() {
     weatherLabel.innerHTML = "Current weather: " + 
         getWeatherForPeriodTime(gtaTime, 0).weather;
 
-    console.log(gtaTime % 1);
     if(gtaTime % 1 >= 0 && gtaTime % 1 <= 0.01 || first == true){
-        console.log("here");
         for(var i = 1; i <= numForecasts; i++){
             futureWeather = futureWeather + "<p>" + 
             getWeatherForPeriodTime(gtaTime, i).weather + " in " + 
@@ -100,8 +97,8 @@ function showGtaTime(time) {
     return hours + ":" + minutes + " " + ampm;
 }
 
-function getGtaTimeFromDate(d) {
-    var timestamp = Math.floor(d / 1000.0);
+function getGtaTimeFromDate(date) {
+    var timestamp = Math.floor(date / 1000.0);
     var gtaHoursTotal = timestamp / gameHourLength;
     return gtaHoursTotal % weatherPeriod;
 
@@ -124,6 +121,7 @@ function getWeatherForPeriodTime(periodTime, next) {
             currIndex = end - 1;
         }
     }
+    
     if(next == 0){
         wea = weatherStateChanges[currIndex][1];
     } 
@@ -139,7 +137,6 @@ function getWeatherForPeriodTime(periodTime, next) {
     return {weather: wea, etaTime: eta};
 }
 
-
 function secToVerboseInterval(seconds) {
     if (seconds < 60) return "Less than 1 minute";
 
@@ -152,8 +149,6 @@ function secToVerboseInterval(seconds) {
     if (ret.endsWith(" ")) ret = ret.slice(0, -1);
     return ret;
 }
-
-
 
 tick();
 var timer = setInterval(tick, 2000);
