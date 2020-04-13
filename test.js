@@ -112,7 +112,7 @@ function getWeatherForPeriodTime(periodTime, next) {
     var end = weatherStateChanges.length;
 
     for(var i = 0; i < end; i++){
-        after = (periodTime > weatherStateChanges[end - 1][0]) ? 1 : i + 1;
+        after = (periodTime >= weatherStateChanges[end - 1][0]) ? 1 : i + 1;
 
         if(periodTime < weatherStateChanges[after][0]){
                 currIndex = i;
