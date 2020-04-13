@@ -73,10 +73,10 @@ function tick() {
     var futureWeather = "";
     
     clockLabel.innerHTML = "Current time in GTA Online: " + showGtaTime(time);
-    weatherLabel.innerHTML = "Current weather: " + 
-        getWeatherForPeriodTime(gtaTime, 0).weather;
 
     if(gtaTime % 1 >= 0 && gtaTime % 1 <= 0.01 || first == true){
+        weatherLabel.innerHTML = "Current weather: " + 
+            getWeatherForPeriodTime(gtaTime, 0).weather;
         for(var i = 1; i <= numForecasts; i++){
             futureWeather = futureWeather + "<p>" + 
             getWeatherForPeriodTime(gtaTime, i).weather + " in " + 
@@ -152,4 +152,4 @@ function secToVerboseInterval(seconds) {
 
 tick();
 var timer = setInterval(tick, 2000);
-}
+};
