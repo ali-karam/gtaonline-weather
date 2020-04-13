@@ -64,25 +64,30 @@ var weatherLabel = document.getElementById('weather');
 var futureLabel = document.getElementById('future');
 var weatherPeriod = 384;
 var gameHourLength = 120;
-var numForecasts = 5; 
+var numForecasts = 20; 
+var first = true;
 
 function tick() {
     var date = new Date();
     var time = date.getTime();
     var gtaTime = getGtaTimeFromDate(time);
     var futureWeather = "";
-
+    
     clockLabel.innerHTML = "Current time in GTA Online: " + showGtaTime(time);
     weatherLabel.innerHTML = "Current weather: " + 
         getWeatherForPeriodTime(gtaTime, 0).weather;
 
-    for(var i = 1; i <= numForecasts; i++){
-        futureWeather = futureWeather + "<p>" + 
-        getWeatherForPeriodTime(gtaTime, i).weather + " in " + 
-        getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
+    console.log(gtaTime % 1);
+    if(gtaTime % 1 >= 0 && gtaTime % 1 <= 0.01 || first == true){
+        console.log("here");
+        for(var i = 1; i <= numForecasts; i++){
+            futureWeather = futureWeather + "<p>" + 
+            getWeatherForPeriodTime(gtaTime, i).weather + " in " + 
+            getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
+        }
+        first = false;
+        futureLabel.innerHTML = futureWeather;
     }
-    futureLabel.innerHTML = futureWeather;
-
 }
 
 function showGtaTime(time) { 
