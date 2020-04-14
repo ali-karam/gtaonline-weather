@@ -80,22 +80,25 @@ function updateWeather(gtaTime){
     var futureWeather = "";
     var currentWeather = "";
     
-    if(gtaTime % 1 >= 0 && gtaTime % 1 <= 0.01 || first == true){
-    currentWeather = "<p class='" + 
-    getWeatherForPeriodTime(gtaTime, 0).weatherState + "'>Current weather: " + 
-        getWeatherForPeriodTime(gtaTime, 0).weatherState;
+    console.log(gtaTime % 1);
+    if(gtaTime % 1 >= 0.255 && gtaTime % 1 <= 0.27 || gtaTime % 1 >= 0.755 && 
+        gtaTime % 1 <= 0.77 || first == true){
+        
+        currentWeather = "<p class='" + 
+        getWeatherForPeriodTime(gtaTime, 0).weatherState + "'>Current weather: " + 
+            getWeatherForPeriodTime(gtaTime, 0).weatherState;
 
-    for(var i = 1; i <= numForecasts; i++){
-        futureWeather = futureWeather + "<p class='" + 
-        getWeatherForPeriodTime(gtaTime, i).weatherState + "'>" + 
-        getWeatherForPeriodTime(gtaTime, i).weatherState + " in " + 
-        getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
-    }
-    currentWeather = currentWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
-    futureWeather = futureWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
-    curWeatherObj.innerHTML = currentWeather;
-    futWeatherObj.innerHTML = futureWeather;
-    first = false;
+        for(var i = 1; i <= numForecasts; i++){
+            futureWeather = futureWeather + "<p class='" + 
+            getWeatherForPeriodTime(gtaTime, i).weatherState + "'>" + 
+            getWeatherForPeriodTime(gtaTime, i).weatherState + " in " + 
+            getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
+        }
+        currentWeather = currentWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
+        futureWeather = futureWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
+        curWeatherObj.innerHTML = currentWeather;
+        futWeatherObj.innerHTML = futureWeather;
+        first = false;
 }
 
 }
