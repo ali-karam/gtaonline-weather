@@ -71,19 +71,26 @@ function tick() {
     var time = date.getTime();
     var gtaTime = getGtaTimeFromDate(time);
     var futureWeather = "";
-    
+    var currentWeather = "";
+
     clockLabel.innerHTML = "Current time in GTA Online: " + showGtaTime(time);
 
     if(gtaTime % 1 >= 0 && gtaTime % 1 <= 0.01 || first == true){
-        weatherLabel.innerHTML = "Current weather: " + 
+        currentWeather = "<p class='" + 
+        getWeatherForPeriodTime(gtaTime, 0).weather + "'>Current weather: " + 
             getWeatherForPeriodTime(gtaTime, 0).weather;
+
         for(var i = 1; i <= numForecasts; i++){
-            futureWeather = futureWeather + "<p>" + 
+            futureWeather = futureWeather + "<p class='" + 
+            getWeatherForPeriodTime(gtaTime, i).weather + "'>" + 
             getWeatherForPeriodTime(gtaTime, i).weather + " in " + 
             getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
         }
-        first = false;
+        currentWeather = currentWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
+        futureWeather = futureWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
+        weatherLabel.innerHTML = currentWeather;
         futureLabel.innerHTML = futureWeather;
+        first = false;
     }
 }
 
