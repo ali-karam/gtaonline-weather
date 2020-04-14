@@ -68,30 +68,36 @@ var first = true;
 
 function tick() {
     var date = new Date();
-    var time = date.getTime();
-    var gtaTime = getGtaTimeFromDate(time);
+    var currentTime = date.getTime();
+    var gameTime = getGtaTimeFromDate(currentTime);
+
+    clockLabel.innerHTML = "Current time in GTA Online: " + 
+        showGtaTime(currentTime);
+    updateWeather(gameTime);
+}
+
+function updateWeather(gtaTime){
     var futureWeather = "";
     var currentWeather = "";
 
-    clockLabel.innerHTML = "Current time in GTA Online: " + showGtaTime(time);
-
     if(gtaTime % 1 >= 0 && gtaTime % 1 <= 0.01 || first == true){
-        currentWeather = "<p class='" + 
-        getWeatherForPeriodTime(gtaTime, 0).weather + "'>Current weather: " + 
-            getWeatherForPeriodTime(gtaTime, 0).weather;
+    currentWeather = "<p class='" + 
+    getWeatherForPeriodTime(gtaTime, 0).weather + "'>Current weather: " + 
+        getWeatherForPeriodTime(gtaTime, 0).weather;
 
-        for(var i = 1; i <= numForecasts; i++){
-            futureWeather = futureWeather + "<p class='" + 
-            getWeatherForPeriodTime(gtaTime, i).weather + "'>" + 
-            getWeatherForPeriodTime(gtaTime, i).weather + " in " + 
-            getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
-        }
-        currentWeather = currentWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
-        futureWeather = futureWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
-        weatherLabel.innerHTML = currentWeather;
-        futureLabel.innerHTML = futureWeather;
-        first = false;
+    for(var i = 1; i <= numForecasts; i++){
+        futureWeather = futureWeather + "<p class='" + 
+        getWeatherForPeriodTime(gtaTime, i).weather + "'>" + 
+        getWeatherForPeriodTime(gtaTime, i).weather + " in " + 
+        getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
     }
+    currentWeather = currentWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
+    futureWeather = futureWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
+    weatherLabel.innerHTML = currentWeather;
+    futureLabel.innerHTML = futureWeather;
+    first = false;
+}
+
 }
 
 function showGtaTime(time) { 
