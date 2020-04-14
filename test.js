@@ -80,7 +80,6 @@ function updateWeather(gtaTime){
     var futureWeather = "";
     var currentWeather = "";
     
-    console.log(gtaTime % 1);
     if(gtaTime % 1 >= 0.255 && gtaTime % 1 <= 0.27 || gtaTime % 1 >= 0.755 && 
         gtaTime % 1 <= 0.77 || first == true){
         
