@@ -58,9 +58,9 @@ const weatherStateChanges = [
     [377,   "Partly Cloudy"]
 ];
 
-var clockLabel = document.getElementById('clock');
-var weatherLabel = document.getElementById('weather');
-var futureLabel = document.getElementById('future');
+var clockObj = document.getElementById('clock');
+var curWeatherObj = document.getElementById('weather');
+var futWeatherObj = document.getElementById('future');
 var weatherPeriod = 384;
 var gameHourLength = 120;
 var numForecasts = 5; 
@@ -69,9 +69,9 @@ var first = true;
 function tick() {
     var date = new Date();
     var currentTime = date.getTime();
-    var gameTime = getGtaTimeFromDate(currentTime);
+    var gameTime = getGtaTime(currentTime);
 
-    clockLabel.innerHTML = "Current time in GTA Online: " + 
+    clockObj.innerHTML = "Current time in GTA Online: " + 
         showGtaTime(currentTime);
     updateWeather(gameTime);
 }
@@ -79,22 +79,22 @@ function tick() {
 function updateWeather(gtaTime){
     var futureWeather = "";
     var currentWeather = "";
-
+    
     if(gtaTime % 1 >= 0 && gtaTime % 1 <= 0.01 || first == true){
     currentWeather = "<p class='" + 
-    getWeatherForPeriodTime(gtaTime, 0).weather + "'>Current weather: " + 
-        getWeatherForPeriodTime(gtaTime, 0).weather;
+    getWeatherForPeriodTime(gtaTime, 0).weatherState + "'>Current weather: " + 
+        getWeatherForPeriodTime(gtaTime, 0).weatherState;
 
     for(var i = 1; i <= numForecasts; i++){
         futureWeather = futureWeather + "<p class='" + 
-        getWeatherForPeriodTime(gtaTime, i).weather + "'>" + 
-        getWeatherForPeriodTime(gtaTime, i).weather + " in " + 
+        getWeatherForPeriodTime(gtaTime, i).weatherState + "'>" + 
+        getWeatherForPeriodTime(gtaTime, i).weatherState + " in " + 
         getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
     }
     currentWeather = currentWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
     futureWeather = futureWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
-    weatherLabel.innerHTML = currentWeather;
-    futureLabel.innerHTML = futureWeather;
+    curWeatherObj.innerHTML = currentWeather;
+    futWeatherObj.innerHTML = futureWeather;
     first = false;
 }
 
@@ -110,44 +110,42 @@ function showGtaTime(time) {
     return hours + ":" + minutes + " " + ampm;
 }
 
-function getGtaTimeFromDate(date) {
-    var timestamp = Math.floor(date / 1000.0);
+function getGtaTime(time) {
+    var timestamp = Math.floor(time / 1000.0);
     var gtaHoursTotal = timestamp / gameHourLength;
     return gtaHoursTotal % weatherPeriod;
 
 }
 
 function getWeatherForPeriodTime(periodTime, next) {
-    var wea = null;
+    var weather = null;
     var eta = null;
-    var currIndex;
-    var after, previous, test;
-    var end = weatherStateChanges.length;
+    var currIndex, nextIndex;
+    var size = weatherStateChanges.length;
 
-    for(var i = 0; i < end; i++){
-        after = (periodTime >= weatherStateChanges[end - 1][0]) ? 1 : i + 1;
+    for(var i = 0; i < size; i++){
+        nextIndex = (periodTime >= weatherStateChanges[size - 1][0]) ? 1 : i + 1;
 
-        if(periodTime < weatherStateChanges[after][0]){
+        if(periodTime < weatherStateChanges[nextIndex][0]){
                 currIndex = i;
                 break;
         } else {
-            currIndex = end - 1;
+            currIndex = size - 1;
         }
     }
-    
     if(next == 0){
-        wea = weatherStateChanges[currIndex][1];
+        weather = weatherStateChanges[currIndex][1];
     } 
-    else if(currIndex + next < end) {
-        wea = weatherStateChanges[currIndex + next][1];
+    else if(currIndex + next < size) {
+        weather = weatherStateChanges[currIndex + next][1];
         eta = secToVerboseInterval((weatherStateChanges[currIndex + 
             next][0] - periodTime) * 120);
     } else {
-        wea = weatherStateChanges[currIndex + next - end + 1][1];
+        weather = weatherStateChanges[currIndex + next - size + 1][1];
         eta = secToVerboseInterval((weatherStateChanges[currIndex + next - 
-            end + 1][0] - periodTime + weatherPeriod) * 120);        
+            size + 1][0] - periodTime + weatherPeriod) * 120);        
     }
-    return {weather: wea, etaTime: eta};
+    return {weatherState: weather, etaTime: eta};
 }
 
 function secToVerboseInterval(seconds) {
