@@ -81,7 +81,7 @@ function updateWeather(gtaTime){
     var currentWeather = "";
     
     if(gtaTime % 1 >= 0.255 && gtaTime % 1 <= 0.27 || gtaTime % 1 >= 0.755 && 
-        gtaTime % 1 <= 0.77 || first == true){
+        gtaTime % 1 <= 0.77 || first){
         
         currentWeather = "<p class='" + 
         getWeatherForPeriodTime(gtaTime, 0).weatherState + "'>Current weather: " + 
