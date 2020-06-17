@@ -58,6 +58,7 @@ const weatherStateChanges = [
     [377,   "Partly Cloudy"]
 ];
 
+//Declare all variables
 var clockObj = document.getElementById('clock');
 var curWeatherObj = document.getElementById('weather');
 var futWeatherObj = document.getElementById('future');
@@ -66,6 +67,7 @@ var gameHourLength = 120;
 var numForecasts = 7; 
 var first = true;
 
+//Clock tick based on game time
 function tick() {
     var date = new Date();
     var currentTime = date.getTime();
@@ -76,6 +78,7 @@ function tick() {
     updateWeather(gameTime);
 }
 
+//Updates the weather forecasts and ETA for forecast every in game day
 function updateWeather(gtaTime){
     var futureWeather = "";
     var currentWeather = "";
@@ -99,10 +102,10 @@ function updateWeather(gtaTime){
         curWeatherObj.innerHTML = currentWeather;
         futWeatherObj.innerHTML = currentWeather + futureWeather;
         first = false;
+    }
 }
 
-}
-
+//Display in game time based on the current time
 function showGtaTime(time) { 
     hours =  Math.floor(time / (2000 * 60)) % 24;
     minutes = Math.floor(time / 2000) % 60;
@@ -113,13 +116,14 @@ function showGtaTime(time) {
     return hours + ":" + minutes + " " + ampm;
 }
 
+//Gets the current game time
 function getGtaTime(time) {
     var timestamp = Math.floor(time / 1000.0);
     var gtaHoursTotal = timestamp / gameHourLength;
     return gtaHoursTotal % weatherPeriod;
-
 }
 
+//Obtain the weather for the given game time
 function getWeatherForPeriodTime(periodTime, next) {
     var weather = null;
     var eta = null;
@@ -151,6 +155,7 @@ function getWeatherForPeriodTime(periodTime, next) {
     return {weatherState: weather, etaTime: eta};
 }
 
+//Converts ETA of next weather to a more readable format
 function secToVerboseInterval(seconds) {
     if (seconds < 60) return "Less than 1 minute";
 
