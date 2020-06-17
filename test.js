@@ -63,7 +63,7 @@ var curWeatherObj = document.getElementById('weather');
 var futWeatherObj = document.getElementById('future');
 var weatherPeriod = 384;
 var gameHourLength = 120;
-var numForecasts = 5; 
+var numForecasts = 7; 
 var first = true;
 
 function tick() {
@@ -71,7 +71,7 @@ function tick() {
     var currentTime = date.getTime();
     var gameTime = getGtaTime(currentTime);
 
-    clockObj.innerHTML = "Current time in GTA Online: " + 
+    clockObj.innerHTML = "GTA Online Time: " + 
         showGtaTime(currentTime);
     updateWeather(gameTime);
 }
@@ -83,20 +83,21 @@ function updateWeather(gtaTime){
     if(gtaTime % 1 >= 0.255 && gtaTime % 1 <= 0.27 || gtaTime % 1 >= 0.755 && 
         gtaTime % 1 <= 0.77 || first){
         
-        currentWeather = "<p class='" + 
+        currentWeather = "<div class='col-12 col-md-6 col-xl-3'><p class='" + 
         getWeatherForPeriodTime(gtaTime, 0).weatherState + "'>Current weather: " + 
-            getWeatherForPeriodTime(gtaTime, 0).weatherState;
+            getWeatherForPeriodTime(gtaTime, 0).weatherState + "</p></div>";
 
         for(var i = 1; i <= numForecasts; i++){
-            futureWeather = futureWeather + "<p class='" + 
+            futureWeather = futureWeather + "<div class='col-12 col-md-6" + 
+                " col-xl-3'><p class='" + 
             getWeatherForPeriodTime(gtaTime, i).weatherState + "'>" + 
             getWeatherForPeriodTime(gtaTime, i).weatherState + " in " + 
-            getWeatherForPeriodTime(gtaTime, i).etaTime + "</p>";
+            getWeatherForPeriodTime(gtaTime, i).etaTime + "</p></div>";
         }
-        currentWeather = currentWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
-        futureWeather = futureWeather.replace(/(\')(\w+)(\s)/mg, "$2-");
+        currentWeather = currentWeather.replace(/(\')(\w+)(\s)/mg, "'$2-");
+        futureWeather = futureWeather.replace(/(\')(\w+)(\s)/mg, "'$2-");
         curWeatherObj.innerHTML = currentWeather;
-        futWeatherObj.innerHTML = futureWeather;
+        futWeatherObj.innerHTML = currentWeather + futureWeather;
         first = false;
 }
 
