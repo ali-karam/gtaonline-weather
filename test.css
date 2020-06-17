@@ -1,0 +1,39 @@
+
+.Clear, .Partly-Cloudy, .Mostly-Cloudy, .Misty, .Foggy, 
+.Hazey, .Drizzling, .Cloudy, .Mostly-Clear, .Raining {
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 150px;
+    width: 600px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+.Clear {
+    background-image: url("images/clear.jpg");
+}
+
+.Partly-Cloudy, .Mostly-Clear{
+    background-image: url("images/smog.jpg");
+}
+
+.Mostly-Cloudy, .Cloudy{
+    background-image: url("images/cloud.jpg");
+}
+
+.Misty, .Drizzling{
+    background-image: url("images/overcast.jpg");
+}
+
+.Foggy{
+    background-image: url("images/fog.jpg");
+}
+
+.Hazey{
+    background-image: url("images/haze.jpg");
+}
+
+.Raining {
+    background-image: url("images/rain.jpg");
+}
